@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Pagos{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Registro de Pago</h4>
+          <form class="form-sample" method="POST" action="#">
+            {% csrf_token %}
+            <p class="card-description">
+              Ingresa los detalles del pago:
+            </p>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="casa">Número de Casa</label>
+                  <input type="text" class="form-control" id="casa" name="casa" placeholder="Ej. 123" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="rut">RUT del Usuario</label>
+                  <input type="text" class="form-control" id="rut" name="rut" placeholder="Ej. 12345678-9" required>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="monto">Monto del Pago</label>
+                  <input type="text" class="form-control" id="monto" name="monto" placeholder="Ej. 50.00" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="fecha">Fecha del Pago</label>
+                  <input type="date" class="form-control" id="fecha" name="fecha" required>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary mr-2">Guardar</button>
+            <button class="btn btn-light">Cancelar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

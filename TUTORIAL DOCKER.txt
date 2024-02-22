@@ -1,0 +1,70 @@
+
+URL DE PYTHON 3.11.6 
+
+
+https://www.python.org/ftp/python/3.11.6/python-3.11.6-amd64.exe
+
+
+
+
+
+SE DESCARGA DOCKER DESKTOP 
+
+https://www.docker.com/products/docker-desktop/
+
+EN LA TERMINAL DE WINDOWS DESCARGAS EL CONTENEDOR DE POSTGRES CON EL COMANDO:
+
+docker pull postgres
+
+
+cuando actualicen todo y tengan listo le tiran este comando para crear el contenedor de docker:
+
+
+docker run --name EXAMENPY -e POSTGRES_PASSWORD=123456789 -p 5432:5432 -d postgres
+
+
+
+
+
+
+
+
+
+
+
+
+CREAR EL PROJECT CON EL MODULO AGUASNS:
+
+
+django-admin startproject EXAMENPY
+
+cd EXAMENPY
+
+python manage.py startapp AguasNS
+
+
+YA PUEDES ABRIR EL PROYECTO EN PYCHARM 
+
+
+
+
+
+
+
+
+
+
+
+
+
+python manage.py makemigrations (crear las migraciones del models.py)
+
+
+python manage.py migrate (migrar las migraciones del models.py a la base de datos)
+
+
+
+python manage.py createsuperuser (crear el super usuario para el admin de django)
+
+python manage.py runserver (correr el servidor de django)
+

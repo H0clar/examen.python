@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Ver Clientes Activos{% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2 class="mb-4">Buscar Clientes Activos</h2>
+    <!-- Formulario de búsqueda -->
+
+    <form id="searchForm" class="mb-3" method="post" action="{% url 'ver_clientes_activos' %}">
+      {% csrf_token %}
+      <div class="input-group">
+        <select id="searchSelect" name="searchSelect" class="form-control">
+          <!-- Cargar dinámicamente las opciones con los sectores registrados -->
+          {% for sector in sectores %}
+            <option value="{{ sector }}">{{ sector }}</option>
+          {% endfor %}
+        </select>
+
+
+        <!-- Modificamos el tipo de botón a "submit" para enviar el formulario -->
+        <button type="submit" class="btn btn-primary">Buscar</button>
+      </div>
+    </form>
+
+
+
+    <!-- Resultados de la búsqueda -->
+    <div class="table-responsive">
+      <table id="clientesTable" class="table table-bordered table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th>Rut</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Sector</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Mostrar los resultados de la búsqueda -->
+          {% for cliente in resultados %}
+            <tr>
+              <td>{{ cliente.rut }}</td>
+              <td>{{ cliente.nombre }}</td>
+              <td>{{ cliente.apellido }}</td>
+              <td>{{ cliente.sector }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Botón para mostrar todos -->
+    <button type="button" class="btn btn-secondary mt-3" id="mostrarTodosBtn">Mostrar Todos</button>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    // Función de búsqueda
+    // Función de búsqueda
+    function searchClientes() {
+      // Obtén el valor seleccionado del sector
+      var selectedSector = document.getElementById('searchSelect').value;
+
+      // Realizar una solicitud AJAX para obtener los resultados
+      $.post(
+        $('#searchForm').attr('action'),
+        { searchSelect: selectedSector },
+        function (data) {
+          // Limpiar la tabla antes de agregar nuevos resultados
+          $('#clientesTable tbody').empty();
+
+          // Verificar si se encontraron resultados
+          if (data.resultados.length > 0) {
+            // Agregar los resultados a la tabla
+            data.resultados.forEach(function (cliente) {
+              var row = `<tr>
+                           <td>${cliente.rut}</td>
+                           <td>${cliente.nombre}</td>
+                           <td>${cliente.apellido}</td>
+                           <td>${cliente.sector}</td>
+                         </tr>`;
+              $('#clientesTable tbody').append(row);
+            });
+          } else {
+            // Mostrar un mensaje si no se encontraron resultados
+            var message = `<tr><td colspan="4">No se encontraron resultados</td></tr>`;
+            $('#clientesTable tbody').append(message);
+          }
+        }
+      );
+    }
+
+
+    // Agregar evento clic al botón "Mostrar Todos"
+    $(document).ready(function () {
+      $('#mostrarTodosBtn').click(function () {
+        // Realizar una solicitud AJAX para obtener todos los clientes activos
+        $.get('{% url "mostrar_todos_clientes_activos" %}', function (data) {
+          // Limpiar la tabla antes de agregar nuevos resultados
+          $('#clientesTable tbody').empty();
+
+          // Agregar los resultados a la tabla
+          data.resultados.forEach(function (cliente) {
+            var row = `<tr>
+                         <td>${cliente.rut}</td>
+                         <td>${cliente.nombre}</td>
+                         <td>${cliente.apellido}</td>
+                         <td>${cliente.sector}</td>
+                       </tr>`;
+            $('#clientesTable tbody').append(row);
+          });
+        });
+      });
+    });
+  </script>
+{% endblock %}

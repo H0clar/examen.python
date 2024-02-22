@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Modificar Clientes{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="display-4 mb-5 text-center">Modificar Clientes</h1>
+
+                <form class="needs-validation" method="post" action="{% url 'actualizar_datos_cliente' %}" novalidate>
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+                        <label for="searchInput" class="form-label">Buscar:</label>
+                        <div class="input-group">
+                            <input type="text" id="searchInput" name="searchInput" class="form-control" placeholder="Ingrese el término de búsqueda">
+                            <button type="button" class="btn btn-primary" id="btnSearch">Buscar</button>
+                        </div>
+                    </div>
+
+                    <!-- Datos del Cliente -->
+                    <div class="mb-3">
+                        <label for="rut_cliente" class="form-label">Rut del Cliente:</label>
+                        <input type="text" name="rut_cliente" id="rut_cliente" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombre_cliente" class="form-label">Nombre del Cliente:</label>
+                        <input type="text" name="nombre_cliente" id="nombre_cliente" class="form-control" readonly>
+                    </div>
+
+                    <!-- Campos Comunes para Modificar e Insertar Cliente -->
+                    <div class="mb-3">
+                        <label for="nuevo_apellido" class="form-label">Nuevo Apellido:</label>
+                        <input type="text" name="nuevo_apellido" id="nuevo_apellido" class="form-control" required>
+                        <div class="invalid-feedback">Este campo es obligatorio.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nuevo_sector" class="form-label">Nuevo Sector:</label>
+                        <select name="nuevo_sector" id="nuevo_sector" class="form-control" required>
+                            <option value="" disabled selected>Selecciona un sector</option>
+                            <option value="Colbún">Colbún</option>
+                            <option value="Panimávida">Panimávida</option>
+                            <option value="Maule Sur">Maule Sur</option>
+                            <option value="La Guardia">La Guardia</option>
+                            <option value="San Nicolas">San Nicolas</option>
+                            <option value="Quinamavida">Quinamavida</option>
+                            <option value="Rari">Rari</option>
+                            <option value="Capilla Palacio">Capilla Palacio</option>
+                        </select>
+                        <div class="invalid-feedback">Este campo es obligatorio.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nuevo_estado" class="form-label">Nuevo Estado:</label>
+                        <select name="nuevo_estado" id="nuevo_estado" class="form-control" required>
+                            <option value="Activo">Activo</option>
+                            <option value="Inactivo">Inactivo</option>
+                        </select>
+                        <div class="invalid-feedback">Este campo es obligatorio.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nuevo_tipo_usuario" class="form-label">Nuevo Tipo de Usuario:</label>
+                        <select name="nuevo_tipo_usuario" id="nuevo_tipo_usuario" class="form-control" required>
+                            <option value="Cliente">Cliente</option>
+                            <option value="Funcionario">Funcionario</option>
+                        </select>
+                        <div class="invalid-feedback">Este campo es obligatorio.</div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Actualizar Datos De Cliente</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('btnSearch').addEventListener('click', function () {
+            var searchInput = document.getElementById('searchInput').value;
+
+            // Realizar una solicitud AJAX a la vista de búsqueda
+            fetch('/buscar_cliente_por_rut/?rut=' + searchInput)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.cliente_encontrado) {
+                        // Actualizar los campos existentes del formulario con los datos del cliente
+                        document.getElementById('rut_cliente').value = data.cliente.rut || '';
+                        document.getElementById('nombre_cliente').value = data.cliente.nombre || '';
+                        document.getElementById('nuevo_apellido').value = data.cliente.apellido || '';
+                        document.getElementById('nuevo_sector').value = data.cliente.sector || '';
+                        document.getElementById('nuevo_estado').value = data.cliente.estado || '';
+                        document.getElementById('nuevo_tipo_usuario').value = data.cliente.tipo_usuario || '';
+                        // Actualiza otros campos del cliente según tu modelo
+                    } else {
+                        alert('Cliente no encontrado');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en la solicitud AJAX:', error);
+                });
+        });
+    </script>
+{% endblock %}

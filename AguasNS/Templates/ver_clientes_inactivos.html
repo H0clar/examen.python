@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Ver Clientes Inactivos{% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2 class="mb-4">Buscar Clientes Inactivos</h2>
+    <!-- Formulario de búsqueda -->
+
+    <form id="searchForm" class="mb-3" method="post" action="{% url 'ver_clientes_inactivos' %}">
+      {% csrf_token %}
+      <div class="input-group">
+        <select id="searchSelect" name="searchSelect" class="form-control">
+          <!-- Cargar dinámicamente las opciones con los sectores registrados -->
+          {% for sector in sectores %}
+            <option value="{{ sector }}">{{ sector }}</option>
+          {% endfor %}
+        </select>
+
+        <!-- Modificamos el tipo de botón a "submit" para enviar el formulario -->
+        <button type="submit" class="btn btn-primary">Buscar</button>
+      </div>
+    </form>
+
+    <!-- Resultados de la búsqueda -->
+    <div class="table-responsive">
+      <table id="clientesTable" class="table table-bordered table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th>Rut</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Sector</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Mostrar los resultados de la búsqueda -->
+          {% for cliente in resultados %}
+            <tr>
+              <td>{{ cliente.rut }}</td>
+              <td>{{ cliente.nombre }}</td>
+              <td>{{ cliente.apellido }}</td>
+              <td>{{ cliente.sector }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Botón para mostrar todos -->
+    <button type="button" class="btn btn-secondary mt-3" id="mostrarTodosBtn">Mostrar Todos</button>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    // Función de búsqueda
+    function searchClientes() {
+      var selectedSector = document.getElementById('searchSelect').value;
+
+      $.post(
+        $('#searchForm').attr('action'),
+        { searchSelect: selectedSector },
+        function (data) {
+          $('#clientesTable tbody').empty();
+
+          if (data.resultados.length > 0) {
+            data.resultados.forEach(function (cliente) {
+              var row = `<tr>
+                           <td>${cliente.rut}</td>
+                           <td>${cliente.nombre}</td>
+                           <td>${cliente.apellido}</td>
+                           <td>${cliente.sector}</td>
+                         </tr>`;
+              $('#clientesTable tbody').append(row);
+            });
+          } else {
+            var message = `<tr><td colspan="4">No se encontraron resultados</td></tr>`;
+            $('#clientesTable tbody').append(message);
+          }
+        }
+      );
+    }
+
+    // Agregar evento clic al botón "Mostrar Todos"
+    $(document).ready(function () {
+      $('#mostrarTodosBtn').click(function () {
+        $.get('{% url "mostrar_todos_clientes_inactivos" %}', function (data) {
+          $('#clientesTable tbody').empty();
+
+          data.resultados.forEach(function (cliente) {
+            var row = `<tr>
+                         <td>${cliente.rut}</td>
+                         <td>${cliente.nombre}</td>
+                         <td>${cliente.apellido}</td>
+                         <td>${cliente.sector}</td>
+                       </tr>`;
+            $('#clientesTable tbody').append(row);
+          });
+        });
+      });
+    });
+  </script>
+{% endblock %}

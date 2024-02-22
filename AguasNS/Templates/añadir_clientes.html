@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Añadir Clientes{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="display-4 mb-4 text-center">Añadir Clientes</h1>
+
+                <form class="needs-validation" method="post" action="{% url 'insertar_cliente' %}" novalidate>
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="rut" class="form-label">Rut:</label>
+                        <input type="text" name="rut" id="rut" class="form-control" required>
+                        <div class="invalid-feedback">Este campo es obligatorio.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre:</label>
+                        <input type="text" name="nombre" id="nombre" class="form-control" required>
+                        <div class="invalid-feedback">Este campo es obligatorio.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="apellido" class="form-label">Apellido:</label>
+                        <input type="text" name="apellido" id="apellido" class="form-control" required>
+                        <div class="invalid-feedback">Este campo es obligatorio.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="sector" class="form-label">Sector:</label>
+                        <select name="sector" id="sector" class="form-control" required>
+                            <option value="" disabled selected>Selecciona un sector</option>
+                            <option value="Colbún">Colbún</option>
+                            <option value="Panimávida">Panimávida</option>
+                            <option value="Maule Sur">Maule Sur</option>
+                            <option value="La Guardia">La Guardia</option>
+                            <option value="San Nicolas">San Nicolas</option>
+                            <option value="Quinamavida">Quinamavida</option>
+                            <option value="Rari">Rari</option>
+                            <option value="Capilla Palacio">Capilla Palacio</option>
+                        </select>
+                        <div class="invalid-feedback">Este campo es obligatorio.</div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="estado" class="form-label">Estado:</label>
+                        <select name="estado" id="estado" class="form-control" required>
+                            <option value="Activo">Activo</option>
+                            <option value="Inactivo">Inactivo</option>
+                        </select>
+                        <div class="invalid-feedback">Este campo es obligatorio.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tipo_usuario" class="form-label">Tipo de Usuario:</label>
+                        <select name="tipo_usuario" id="tipo_usuario" class="form-control" required>
+                            <option value="Cliente">Cliente</option>
+                            <option value="Funcionario">Funcionario</option>
+                        </select>
+                        <div class="invalid-feedback">Este campo es obligatorio.</div>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Agregar validación de Bootstrap al formulario
+        (function () {
+            'use strict'
+
+            // Obtener todos los formularios que queremos aplicar estilos de validación de Bootstrap
+            var forms = document.querySelectorAll('.needs-validation')
+
+            // Iterar sobre ellos y evitar la presentación del formulario si no es válido
+            Array.from(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+{% endblock %}
